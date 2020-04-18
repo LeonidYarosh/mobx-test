@@ -1,151 +1,61 @@
-import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
+import React, {Component} from 'react'
+import ReactDOM from 'react-dom'
 
-import {observable, action, configure, computed, decorate } from 'mobx';
-import { observer } from 'mobx-react';
+import {observable, action, configure, decorate } from 'mobx'
+import { observer } from 'mobx-react'
 
-import './index.css';
+import './index.css'
 
 configure({enforceActions: 'observed'})
 
 class Store {
-  devsList = [
-    { id: '1', name: 'Jack', sp: 12 },
-    { id: '2', name: 'Max', sp: 10 },
-    { id: '3', name: 'Leo', sp: 8 },
-  ]
-  filter = ''
+  user = null
 
-  get totalSum() {
-    return this.devsList.reduce((sum, { sp }) => sum += sp, 0)
+
+  setUser(res) {
+    this.user = res[0]
   }
 
-  get topPerformer() {
-    let nameMax = ''
-    let spMax = 0
-
-    this.devsList.forEach(el => {
-      if (spMax < el.sp) {
-        nameMax = el.name
-        spMax = el.sp
-      }
-    })
-
-    return nameMax
+  getUser() {
+    fetch('https://randomuser.me/api/')
+      .then(res => res.json())
+      .then(res => {
+        if (res.results) {
+          this.setUser(res.results)
+        }
+      })
+      .catch ((e) => {
+        console.error(e)
+      })
   }
 
-  get filteredDev() {
-    return this.devsList.filter(({ name }) => name.toLowerCase().includes(this.filter.toLowerCase() || ''))
-  }
-
-  clearList() {
-    this.devsList = []
-  }
-
-  addDeveloper(dev) {
-    this.devsList.push(dev)
-  }
-
-  updateFilter(value) {
-    this.filter = value
-  }
 }
 
 decorate(Store, {
-  devsList: observable,
-  filter: observable,
-  totalSum: computed,
-  topPerformer: computed,
-  filteredDev: computed,
-  clearList: action,
-  addDeveloper: action,
-  updateFilter: action,
+  user: observable,
+  getUser: action.bound,
+  setUser: action,
 })
 
 const appStore = new Store()
 
-const Row = ({name, sp}) =>
-  <tr>
-    <td>{name}</td>
-    <td>{sp}</td>
-  </tr>
 
-
-@observer class Table extends Component {
-  render() {
-    const {store} = this.props
-
-    return (
-     <table>
-       <thead>
-          <tr>
-            <td>Name:</td>
-            <td>SP:</td>
-          </tr>
-       </thead>
-       <tbody>
-       {
-         store.filteredDev.map((dev) => <Row key={dev.id} {...dev}/>)
-       }
-       </tbody>
-       <tfoot>
-       <tr>
-         <td>Team SP:</td>
-         <td>{store.totalSum}</td>
-       </tr>
-       <tr>
-         <td>Top Performer:</td>
-         <td>{store.topPerformer || '' }</td>
-       </tr>
-       </tfoot>
-     </table>
-    )
-  }
-}
-
-@observer class Controls extends Component {
-  addDeveloper = () => {
-    const name = prompt("The Name:")
-    const sp = parseInt(prompt('The story point:', 10))
-    this.props.store.addDeveloper({ id: name, name, sp })
-  }
-
-  clearList = () => {
-    this.props.store.clearList()
-  }
-
-  filterDev = ({ target: { value }}) => {
-    this.props.store.updateFilter(value)
-  }
-
+@observer class App extends Component {
   render() {
     const {
-      filter,
-    } = this.props.store
+      store
+    } = this.props
 
-    return (
-      <div className="controls">
-        <button onClick={this.clearList} >Clear table</button>
-        <button onClick={this.addDeveloper} >Add record</button>
-        <input value={filter} onChange={this.filterDev} />
-      </div>
-    )
-  }
-}
-
-class App extends Component {
-  render() {
     return (
       <div>
-        <h1>Sprint Board:</h1>
-        <Controls store={appStore} />
-        <Table store={appStore} />
+        <button onClick={store.getUser} >Get user</button>
+        <h1>{store.user?.login?.username || 'Default Name'}</h1>
       </div>
     )
   }
 }
 
 ReactDOM.render(
-  <App store={Store} />,
+  <App store={appStore} />,
   document.getElementById('root')
 );
