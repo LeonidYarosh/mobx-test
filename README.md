@@ -1,8 +1,8 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## MOBX test
 
-In the project directory, you can run:
+Проба mobx на React. Тестовое приложение трекер SP для разработчиков
 
 ### `yarn start`
 
