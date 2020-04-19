@@ -1,12 +1,13 @@
-import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
+import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
 
-import {observable, action, configure, computed, decorate } from 'mobx';
-import { observer } from 'mobx-react';
+import { observable, action, configure, computed, decorate } from 'mobx'
+import { observer } from 'mobx-react'
 
-import './index.css';
+import './index.css'
 
-configure({enforceActions: 'observed'})
+configure({ enforceActions: 'observed' })
 
 class Store {
   devsList = [
@@ -64,48 +65,70 @@ decorate(Store, {
 
 const appStore = new Store()
 
-const Row = ({name, sp}) =>
+const Row = ({ name, sp }) =>
   <tr>
     <td>{name}</td>
     <td>{sp}</td>
   </tr>
 
+Row.propTypes = {
+  name: PropTypes.string,
+  sp: PropTypes.number,
+}
+
 
 @observer class Table extends Component {
   render() {
-    const {store} = this.props
+    const { store } = this.props
 
     return (
-     <table>
-       <thead>
+      <table>
+        <thead>
           <tr>
             <td>Name:</td>
             <td>SP:</td>
           </tr>
-       </thead>
-       <tbody>
-       {
-         store.filteredDev.map((dev) => <Row key={dev.id} {...dev}/>)
-       }
-       </tbody>
-       <tfoot>
-       <tr>
-         <td>Team SP:</td>
-         <td>{store.totalSum}</td>
-       </tr>
-       <tr>
-         <td>Top Performer:</td>
-         <td>{store.topPerformer || '' }</td>
-       </tr>
-       </tfoot>
-     </table>
+        </thead>
+        <tbody>
+          {
+            store.filteredDev.map((dev) => <Row key={dev.id} {...dev}/>)
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Team SP:</td>
+            <td>{store.totalSum}</td>
+          </tr>
+          <tr>
+            <td>Top Performer:</td>
+            <td>{store.topPerformer || '' }</td>
+          </tr>
+        </tfoot>
+      </table>
     )
   }
 }
 
+Table.propTypes = {
+  store: PropTypes.shape({
+    filteredDev: PropTypes.array,
+    totalSum: PropTypes.number,
+    topPerformer: PropTypes.string,
+  })
+}
+
 @observer class Controls extends Component {
+  static propTypes = {
+    store: PropTypes.shape({
+      addDeveloper: PropTypes.func,
+      clearList: PropTypes.func,
+      updateFilter: PropTypes.func,
+      filter: PropTypes.string,
+    })
+  }
+
   addDeveloper = () => {
-    const name = prompt("The Name:")
+    const name = prompt('The Name:')
     const sp = parseInt(prompt('The story point:', 10))
     this.props.store.addDeveloper({ id: name, name, sp })
   }
@@ -114,7 +137,7 @@ const Row = ({name, sp}) =>
     this.props.store.clearList()
   }
 
-  filterDev = ({ target: { value }}) => {
+  filterDev = ({ target: { value } }) => {
     this.props.store.updateFilter(value)
   }
 
@@ -148,4 +171,4 @@ class App extends Component {
 ReactDOM.render(
   <App store={Store} />,
   document.getElementById('root')
-);
+)
