@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 
-import { appStore, Store } from './store'
+import { appStore, Store } from './store/store'
 
 import { Table } from './components/table'
 import { Controls } from './components/controls'

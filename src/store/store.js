@@ -48,7 +48,6 @@ export class Store {
   }
 
   setError({ name, flag }) {
-    debugger
     this.error[name] = flag
   }
 }
