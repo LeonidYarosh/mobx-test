@@ -5,7 +5,7 @@ import { Row } from './row'
 
 
 export const Table = observer(({ store }) =>
-  <table>
+  <table id="main-table">
     <thead>
       <tr>
         <td>Name:</td>

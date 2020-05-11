@@ -68,7 +68,9 @@
     "test:ui": "cypress run --env failOnSnapshotDiff=false",
     "test:ui:open": "cypress open --env failOnSnapshotDiff=false",
     "test:ui:create": "cypress run --env updateSnapshots=true",
-    "test:ui:report": "cypress run --reporter cypress-image-snapshot/reporter"
+    "test:ui:report": "cypress run --reporter cypress-image-snapshot/reporter",
+    "test:testcafe": "testcafe chrome testcafe/",
+    "test:testcafe-cucumber": "gherkin-testcafe chrome testcafe/features/**/*.js testcafe/features/*.feature"
   },
   "jest": {
     "setupFiles": [
@@ -122,13 +124,16 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.8.3",
+    "cucumber": "5.1.0",
     "cypress": "^4.4.0",
     "cypress-image-snapshot": "^3.1.1",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "eslint-plugin-babel": "^5.3.0",
     "eslint-plugin-cypress": "^2.10.3",
+    "gherkin-testcafe": "^2.5.0",
     "mobx": "^5.15.4",
-    "mobx-react": "^6.1.8"
+    "mobx-react": "^6.1.8",
+    "testcafe": "^1.8.4"
   }
 }
