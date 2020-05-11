@@ -122,7 +122,8 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.8.3",
-    "cypress": "^4.4.0",
+    "cypress": "4.4.0",
+    "cypress-cucumber-preprocessor": "2.3.1",
     "cypress-image-snapshot": "^3.1.1",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
@@ -130,5 +131,8 @@
     "eslint-plugin-cypress": "^2.10.3",
     "mobx": "^5.15.4",
     "mobx-react": "^6.1.8"
+  },
+  "cypress-cucumber-preprocessor": {
+    "nonGlobalStepDefinitions": true
   }
 }
