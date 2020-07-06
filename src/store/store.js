@@ -1,13 +1,16 @@
 import { observable, action, configure, computed, decorate } from 'mobx'
+import axios from 'axios'
 
 configure({ enforceActions: 'observed' })
 
+const defaultList = [
+  { id: '1', name: 'Jack', sp: 12 },
+  { id: '2', name: 'Max', sp: 10 },
+  { id: '3', name: 'Leonid', sp: 88 },
+]
+
 export class Store {
-  devsList = [
-    { id: '1', name: 'Jack', sp: 12 },
-    { id: '2', name: 'Max', sp: 10 },
-    { id: '3', name: 'Leo', sp: 8 },
-  ]
+  devsList = []
   filter = ''
   error = {
     addDev: false,
@@ -50,6 +53,17 @@ export class Store {
   setError({ name, flag }) {
     this.error[name] = flag
   }
+
+  requestInitialList() {
+    axios.post('/api/getBoard')
+      .then(action((res) => {
+        this.devsList = res?.data || defaultList
+      }))
+      .catch(action((err) => {
+        console.error(err)
+        this.devsList = defaultList
+      }))
+  }
 }
 
 decorate(Store, {
@@ -63,6 +77,7 @@ decorate(Store, {
   addDeveloper: action,
   updateFilter: action,
   setError: action,
+  requestInitialList: action,
 })
 
 export const appStore = new Store()

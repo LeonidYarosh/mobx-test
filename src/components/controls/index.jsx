@@ -10,12 +10,17 @@ import { observer } from 'mobx-react'
       updateFilter: PropTypes.func,
       filter: PropTypes.string,
       setError: PropTypes.func,
+      requestInitialList: PropTypes.func,
     })
   }
 
   state = {
     name: '',
     sp: ''
+  }
+
+  componentDidMount() {
+    this.props.store.requestInitialList()
   }
 
   addDeveloper = () => {
